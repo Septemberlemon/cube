@@ -64,10 +64,7 @@ class Permutation:
 
     def __eq__(self, other: "Permutation") -> bool:
         assert isinstance(other, Permutation)
-        for element in self.elements | other.elements:
-            if self(element) != other(element):
-                return False
-        return True
+        return self.mapping == other.mapping
 
     @staticmethod
     def _create_permutation_from_mapping(mapping: dict) -> "Permutation":
@@ -76,8 +73,14 @@ class Permutation:
         return res
 
     def __mul__(self, other: "Permutation") -> "Permutation":
-        mapping = {k: self(other(k)) for k in self.elements | other.elements}
-        mapping = {k: v for k, v in mapping.items() if k != v}
+        mapping = {}
+        for k in self.mapping:
+            if (v := self(other(k))) != k:
+                mapping[k] = v
+        for k in other.mapping:
+            if k not in self.mapping:
+                if (v := self(other(k))) != k:
+                    mapping[k] = v
         return self._create_permutation_from_mapping(mapping)
 
     def inverse(self) -> "Permutation":
