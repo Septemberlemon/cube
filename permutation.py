@@ -1,4 +1,4 @@
-from typing import List, Tuple, Set, Callable
+from typing import List, Tuple, Set
 from math import lcm
 
 
@@ -19,12 +19,12 @@ class Permutation:
             self.mapping = {}
             for cycle in cycles:
                 assert isinstance(cycle, tuple)
+                if len(cycle) == 1:
+                    continue
                 for i, element in enumerate(cycle):
                     if element in self.mapping:
                         raise ValueError(f"元素{element}重复")
                     self.mapping[element] = cycle[(i + 1) % len(cycle)]
-            # 去除恒等映射
-            self.mapping = {k: v for k, v in self.mapping.items() if k != v}
 
     @property
     def elements(self) -> Set:
@@ -32,26 +32,25 @@ class Permutation:
 
     @property
     def order(self) -> int:
-        cycles = self._get_cycles(self.elements, self)
+        cycles = self._get_cycles()
         return lcm(*(len(cycle) for cycle in cycles))
 
-    @staticmethod
-    def _get_cycles(elements: List | Set, func: Callable) -> List[Tuple]:
+    def _get_cycles(self, sort=False) -> List[Tuple]:
         cycles: List[Tuple] = []
         processed_elements = set()
-
+        elements = self.elements if not sort else sorted(self.elements)
         for element in elements:
             if element not in processed_elements:
                 cycle = [element]
                 processed_elements.add(element)
-                while (element := func(cycle[-1])) != cycle[0]:
+                while (element := self(cycle[-1])) != cycle[0]:
                     cycle.append(element)
                     processed_elements.add(element)
                 cycles.append(tuple(cycle))
         return cycles
 
     def __str__(self) -> str:
-        cycles = self._get_cycles(sorted(list(self.elements)), self)
+        cycles = self._get_cycles(sort=True)
 
         if not cycles:
             return "[]"
@@ -65,6 +64,9 @@ class Permutation:
     def __eq__(self, other: "Permutation") -> bool:
         assert isinstance(other, Permutation)
         return self.mapping == other.mapping
+
+    def __hash__(self):
+        return hash(tuple(self._get_cycles(sort=True)))
 
     @staticmethod
     def _create_permutation_from_mapping(mapping: dict) -> "Permutation":
