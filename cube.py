@@ -27,6 +27,10 @@ class Cube:
         :param face: 要转动的面
         :param clockwise: 若为True，则顺时针转动，否则逆时针转动
         """
+        if face in short_name:
+            clockwise = not face.endswith("'")
+            face = short_name[face]
+
         idx = face2idx[face]
         self.faces[idx] = np.rot90(self.faces[idx], -1 if clockwise else 1)
         side_idxes = [idx + 1, idx + 2, idx + 4, idx + 5]
@@ -79,3 +83,13 @@ class Cube:
     def _draw_face(self, face):
         for line in face:
             self._draw_row(line, prefix_spaces=2 * 3 * (5 + 1), suffix_spaces=3 * (5 + 1))
+
+
+if __name__ == '__main__':
+    li = [np.array([idx for _ in range(9)]).reshape(3, 3) for idx in range(6)]
+    cube = Cube(li)
+    cube.show()
+    for _ in range(3):
+        for move in ['U', 'U', 'U', 'B', 'U', 'D', 'B', "D'"]:
+            cube.rotate(move)
+            cube.show()
