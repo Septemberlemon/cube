@@ -8,6 +8,21 @@ face2idx = {
     "right": 5,
 }
 
+short_name = {
+    "U": "up",
+    "D": "down",
+    "F": "front",
+    "B": "back",
+    "L": "left",
+    "R": "right",
+    "U'": "up",
+    "D'": "down",
+    "F'": "front",
+    "B'": "back",
+    "L'": "left",
+    "R'": "right",
+}
+
 # 每个数字对应的颜色
 num2color = {
     0: "white",
