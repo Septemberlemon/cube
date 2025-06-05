@@ -26,10 +26,10 @@ short_name = {
 # 每个数字对应的颜色
 num2color = {
     0: "white",
-    1: "yellow",
-    2: "green",
-    3: "blue",
-    4: "orange",
+    1: "blue",
+    2: "orange",
+    3: "yellow",
+    4: "green",
     5: "red",
 }
 

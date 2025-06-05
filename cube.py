@@ -33,8 +33,8 @@ class Cube:
 
         idx = face2idx[face]
         self.faces[idx] = np.rot90(self.faces[idx], -1 if clockwise else 1)
-        side_idxes = [idx + 1, idx + 2, idx + 4, idx + 5]
-        side_idxes = [i % 6 for i in side_idxes]
+        side_idxes = [1, 2, 4, 5]
+        side_idxes = [(idx + i) % 6 for i in side_idxes]
         if idx & 1:
             if clockwise:
                 temp = self.faces[side_idxes[0]][:, -1].copy()

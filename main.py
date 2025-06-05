@@ -1,19 +1,20 @@
-import numpy as np
-
-from config import face2idx
-from cube import Cube
+from basic_moves import basic_move_permutation
 from permutation import Permutation
 
 
-li = np.array([i for i in range(6 * 3 * 3)]).reshape(6, 3, 3)
-cube = Cube(li)
+def dfs(p, visited, depth, path):
+    if depth >= 11:
+        return
+    if p.order == 3:
+        print(path)
+        print(p)
+    depth += 1
+    if p not in visited:
+        visited.add(p)
+        for move, permutation in basic_move_permutation.items():
+            dfs(p * permutation, visited, depth, path + [move])
 
-p = {}
-for face in face2idx:
-    old_facelets = cube.faces.reshape(-1).tolist()
-    cube.rotate(face)
-    new_facelets = cube.faces.reshape(-1).tolist()
-    cube.rotate(face, False)
-    p[face] = Permutation(old_facelets, new_facelets)
 
+visited = set()
 e = Permutation()
+dfs(e, visited, 0, [])
